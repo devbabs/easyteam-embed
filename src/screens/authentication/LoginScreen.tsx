@@ -9,8 +9,8 @@ import { RootState } from '../../infrastructure/state-management/store'
 
 const LoginScreen = () => {
     const dispatch = useDispatch()
-    const [username, setUsername] = useState('Macaulay')
-    const [password, setPassword] = useState('123456')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
     const {isAuthenticatingUser} = useSelector((state: RootState) => state.authentication)
     
     const handleLogin = () => {

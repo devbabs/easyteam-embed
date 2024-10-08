@@ -14,7 +14,7 @@ const MainNavigator = () => {
     
     useEffect(() => {
         if (token) {
-            dispatch(fetchEmployees())
+            dispatch(fetchEmployees() as any)
         }
     }, [token])
     
