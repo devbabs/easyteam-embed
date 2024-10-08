@@ -1,4 +1,4 @@
-import { Alert, Platform, StyleSheet, Text, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import { ShiftForm, ShiftFormRef } from '@easyteam/ui';
 
@@ -10,15 +10,8 @@ const ShiftFormScreen = ({navigation, route}) => {
         // Modify the screen title and add a cancel button to the header
         const screenTitle = date ? new Date(date).toLocaleString("en-US") : "Add Shift";
 
-        const headerLeft = Platform.select({
-            // eslint-disable-next-line react/no-unstable-nested-components
-            // ios: () => <HeaderBackButton tintColor="#ff3479" onPress={() => navigation.goBack()} />,
-            default: undefined,
-        });
-
         navigation.setOptions({
             title: screenTitle,
-            headerLeft,
         });
     }, [navigation, date]);
 
@@ -54,8 +47,8 @@ const ShiftFormScreen = ({navigation, route}) => {
         <View style={{ flex: 1, backgroundColor: '#000' }}>
             <ShiftForm
                 ref={ref}
-                employeeId={route.params.employeeId}
-                shiftDate={route.params.date}
+                employeeId={employeeId}
+                shiftDate={date}
                 onSaveSuccess={() => navigation.goBack()}
                 onCancelPress={() => navigation.goBack()}
                 onEvent={event => console.log(event)}
@@ -63,7 +56,5 @@ const ShiftFormScreen = ({navigation, route}) => {
         </View>
     );
 }
-
-const styles = StyleSheet.create({})
 
 export default ShiftFormScreen

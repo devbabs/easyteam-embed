@@ -1,37 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { Http } from '../../common/network/https'
-import { RootState } from './store'
-import { newState } from '../../common/utils/newState'
+import { Http } from '../../http-module/https'
+import { RootState } from '../store'
+import { copyObject } from '../../../common/utils/copyObject'
 import { REHYDRATE, RehydrateAction } from 'redux-persist';
-
-export interface EmployeeInterface {
-    id: number
-    name: string
-    location_id: number
-    is_admin: boolean
-}
-
-export interface AuthenticationInterface {
-    token: string | null
-    user: EmployeeInterface | null
-    isAuthenticatingUser: boolean
-}
+import { AuthenticationInterface, InitialAuthenticationState } from './AuthenticationState';
 
 interface RehydrateAppAction extends RehydrateAction {
     payload?: RootState;
-}
-
-const initialState: AuthenticationInterface = {
-    token: null,
-    user: null,
-    isAuthenticatingUser: false
 }
 
 const rehydrate = (
 	state: AuthenticationInterface,
 	rehydrateParams: RehydrateAppAction,
 ) => {
-	return newState(rehydrateParams.payload?.authentication || state, {
+	return copyObject(rehydrateParams.payload?.authentication || state, {
 		token: rehydrateParams.payload?.authentication?.token ?? null,
 		user: rehydrateParams.payload?.authentication?.user ?? null,
 		isAuthenticatingUser: rehydrateParams.payload?.authentication?.isAuthenticatingUser ?? false,
@@ -47,7 +29,7 @@ export const login = createAsyncThunk(
 		},
 		thunkAPI
 	) => {
-		const { dispatch, rejectWithValue } = thunkAPI
+		const { rejectWithValue } = thunkAPI
 		
         try {
 			const response = await Http.post(`/login`, payload)
@@ -68,7 +50,7 @@ export const {
     actions
 } =  createSlice({
     name: 'AuthenticationReducer',
-    initialState,
+    initialState: InitialAuthenticationState,
     reducers: {
         logout: (state: AuthenticationInterface) => {
             state.token = null;
@@ -78,15 +60,15 @@ export const {
     extraReducers: builder => {
         builder.addCase(REHYDRATE, rehydrate);
         builder.addCase(login.fulfilled, (state, action) => {
-          state.token = action.payload.token;
-          state.user = action.payload.user;
-          state.isAuthenticatingUser = false;
+            state.token = action.payload.token;
+            state.user = action.payload.user;
+            state.isAuthenticatingUser = false;
         });
-        builder.addCase(login.pending, (state, action) => {
-          state.isAuthenticatingUser = true;
+        builder.addCase(login.pending, (state) => {
+            state.isAuthenticatingUser = true;
         });
-        builder.addCase(login.rejected, (state, action) => {
-          state.isAuthenticatingUser = false;
+        builder.addCase(login.rejected, (state) => {
+            state.isAuthenticatingUser = false;
         });
     }
 })

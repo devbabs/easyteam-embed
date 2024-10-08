@@ -17,15 +17,6 @@ const EmployeeTimeSheetScreen = ({ navigation, route }) => {
     const [startDate, setStartDate] = useState<string | undefined>(pStartDate);
     const [endDate, setEndDate] = useState<string | undefined>(pEndDate);
 
-    const handleBack = useCallback(() => {
-        if (ref.current) {
-            navigation.navigate('Employees', {
-                startDate,
-                endDate,
-            });
-        }
-    }, [navigation, startDate, endDate, ref]);
-	
     useLayoutEffect(() => {
         // Allow the user to add a new shift if they have write permissions
         if (ref.current?.adminWritePermissions) {
@@ -59,6 +50,7 @@ const EmployeeTimeSheetScreen = ({ navigation, route }) => {
             />
         );
     }
+
 
     return (
         <Stack.Navigator

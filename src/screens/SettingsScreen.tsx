@@ -1,9 +1,9 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
 import { Settings } from '@easyteam/ui'
 import { Button } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
-import { logout } from '../core/store/AuthenticationSlice'
+import { logout } from '../infrastructure/state-management/authentication/AuthenticationSlice'
 
 const SettingsScreen = () => {
     const dispatch = useDispatch()
@@ -23,17 +23,10 @@ const SettingsScreen = () => {
                 </Button>
             </View>
             <Settings
-                onSave={({ employees, isGlobalTimeTrackingEnabled }) => {
-                    /* 
-                        Optionally handle settings change
-                    */
-                }}
-                // onEvent={event => console.log(event)}
+                onSave={({ employees, isGlobalTimeTrackingEnabled }) => {}}
             />
         </View>
     )
 }
-
-const styles = StyleSheet.create({})
 
 export default SettingsScreen

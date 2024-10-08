@@ -1,18 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { Http } from '../../common/network/https'
-import { RootState } from './store'
-import { newState } from '../../common/utils/newState'
 import { REHYDRATE, RehydrateAction } from 'redux-persist';
-
-export interface EmployeesStateInterface {
-    employees: any[]
-    isFetchingEmployees: boolean
-}
-
-const initialState: EmployeesStateInterface = {
-    employees: [],
-    isFetchingEmployees: false
-}
+import { EmployeesStateInterface, InitialEmployeesState } from './EmployeesState';
+import { Http } from '../../http-module/https';
+import { copyObject } from '../../../common/utils/copyObject';
+import { RootState } from '../store';
 
 interface RehydrateAppAction extends RehydrateAction {
     payload?: RootState;
@@ -22,7 +13,7 @@ const rehydrate = (
 	state: EmployeesStateInterface,
 	rehydrateParams: RehydrateAppAction,
 ) => {
-	return newState(rehydrateParams.payload?.employees || state, {
+	return copyObject(rehydrateParams.payload?.employees || state, {
 		employees: rehydrateParams.payload?.employees?.employees ?? [],
 		isFetchingEmployees: rehydrateParams.payload?.employees?.isFetchingEmployees ?? false,
 	});
@@ -31,7 +22,7 @@ const rehydrate = (
 export const fetchEmployees = createAsyncThunk(
     'employees.fetchEmployees',
     async (_, thunkAPI) => {
-        const { dispatch, rejectWithValue } = thunkAPI;
+        const { rejectWithValue } = thunkAPI;
 
         try {
             const response = await Http.get(`/employees`);
@@ -52,7 +43,7 @@ export const {
     actions
 } =  createSlice({
     name: 'EmployeesReducer',
-    initialState,
+    initialState: InitialEmployeesState,
     reducers: {},
     extraReducers: builder => {
         builder.addCase(REHYDRATE, rehydrate);
@@ -60,15 +51,11 @@ export const {
           state.employees = action.payload.employees;
           state.isFetchingEmployees = false;
         });
-        builder.addCase(fetchEmployees.pending, (state, action) => {
+        builder.addCase(fetchEmployees.pending, (state) => {
           state.isFetchingEmployees = true;
         });
-        builder.addCase(fetchEmployees.rejected, (state, action) => {
+        builder.addCase(fetchEmployees.rejected, (state) => {
           state.isFetchingEmployees = false;
         });
     }
 })
-
-export const {
-
-} = actions

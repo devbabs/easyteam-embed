@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Platform, StatusBar} from 'react-native';
 import Config from 'react-native-config';
-import {store} from '../../core/store/store';
+import { store } from '../state-management/store';
 
 export const Http = axios.create({
 	baseURL: Config.API_URL,
@@ -22,8 +22,6 @@ Http.interceptors.request.use(
 		if (Platform.OS === 'ios') {
 			StatusBar.setNetworkActivityIndicatorVisible(true);
 		}
-
-		// console.log("Config", config)
 
 		return config;
 	},
@@ -47,13 +45,6 @@ Http.interceptors.response.use(
 		if (Platform.OS === 'ios') {
 			StatusBar.setNetworkActivityIndicatorVisible(false);
 		}
-
-		// console.log("Response Error", error)
-
-		// if (error.response.status === 401) {
-		// 	// store.dispatch(partialLogout()); // Remove comment from this line
-		// 	// store.dispatch(setRoot('splash'));
-		// }
 
 		return Promise.reject(error);
 	},
