@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Http } from '../../common/network/https'
+import { RootState } from './store'
+import { newState } from '../../common/utils/newState'
+import { REHYDRATE, RehydrateAction } from 'redux-persist';
 
 export interface EmployeesStateInterface {
     employees: any[]
@@ -10,6 +13,20 @@ const initialState: EmployeesStateInterface = {
     employees: [],
     isFetchingEmployees: false
 }
+
+interface RehydrateAppAction extends RehydrateAction {
+    payload?: RootState;
+}
+
+const rehydrate = (
+	state: EmployeesStateInterface,
+	rehydrateParams: RehydrateAppAction,
+) => {
+	return newState(rehydrateParams.payload?.employees || state, {
+		employees: rehydrateParams.payload?.employees?.employees ?? [],
+		isFetchingEmployees: rehydrateParams.payload?.employees?.isFetchingEmployees ?? false,
+	});
+};
 
 export const fetchEmployees = createAsyncThunk(
     'employees.fetchEmployees',
@@ -38,7 +55,7 @@ export const {
     initialState,
     reducers: {},
     extraReducers: builder => {
-        // builder.addCase(REHYDRATE, rehydrate);
+        builder.addCase(REHYDRATE, rehydrate);
         builder.addCase(fetchEmployees.fulfilled, (state, action) => {
           state.employees = action.payload.employees;
           state.isFetchingEmployees = false;

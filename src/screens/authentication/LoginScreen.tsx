@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, TextInput } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../../core/store/AuthenticationSlice'
@@ -8,11 +8,18 @@ import { RootState } from '../../core/store/store'
 import ToastManager, { Toast } from 'react-native-toast-alert'
 
 const LoginScreen = () => {
+    const {token} = useSelector((state: RootState) => state.authentication)
     const dispatch = useDispatch()
     const [username, setUsername] = useState('Macaulay')
     const [password, setPassword] = useState('123456')
     const {isAuthenticatingUser} = useSelector((state: RootState) => state.authentication)
 
+    // useEffect(() => {
+    //     if (!token) {
+    //         Toast.success("Logout successful")
+    //     }
+    // }, [token])
+    
     const handleLogin = () => {
         if(username == "" || password == "") {
             Toast.error('Please enter your username and password.')

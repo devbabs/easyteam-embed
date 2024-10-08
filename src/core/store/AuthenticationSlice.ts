@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Http } from '../../common/network/https'
+import { RootState } from './store'
+import { newState } from '../../common/utils/newState'
+import { REHYDRATE, RehydrateAction } from 'redux-persist';
 
 export interface EmployeeInterface {
     id: number
@@ -8,17 +11,32 @@ export interface EmployeeInterface {
     is_admin: boolean
 }
 
-export interface AuthenticationStateInterface {
+export interface AuthenticationInterface {
     token: string | null
     user: EmployeeInterface | null
     isAuthenticatingUser: boolean
 }
 
-const initialState: AuthenticationStateInterface = {
+interface RehydrateAppAction extends RehydrateAction {
+    payload?: RootState;
+}
+
+const initialState: AuthenticationInterface = {
     token: null,
     user: null,
     isAuthenticatingUser: false
 }
+
+const rehydrate = (
+	state: AuthenticationInterface,
+	rehydrateParams: RehydrateAppAction,
+) => {
+	return newState(rehydrateParams.payload?.authentication || state, {
+		token: rehydrateParams.payload?.authentication?.token ?? null,
+		user: rehydrateParams.payload?.authentication?.user ?? null,
+		isAuthenticatingUser: rehydrateParams.payload?.authentication?.isAuthenticatingUser ?? false,
+	});
+};
 
 export const login = createAsyncThunk(
 	'authentication/login',
@@ -51,9 +69,14 @@ export const {
 } =  createSlice({
     name: 'AuthenticationReducer',
     initialState,
-    reducers: {},
+    reducers: {
+        logout: (state: AuthenticationInterface) => {
+            state.token = null;
+            state.user = null;
+        }
+    },
     extraReducers: builder => {
-        // builder.addCase(REHYDRATE, rehydrate);
+        builder.addCase(REHYDRATE, rehydrate);
         builder.addCase(login.fulfilled, (state, action) => {
           state.token = action.payload.token;
           state.user = action.payload.user;
@@ -69,5 +92,5 @@ export const {
 })
 
 export const {
-
+    logout
 } = actions

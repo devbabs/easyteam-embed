@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { Timesheet, TimesheetRef } from '@easyteam/ui';
 
@@ -16,7 +16,7 @@ const TimeSheetScreen = () => {
             }}
             startDate={startDate}
             endDate={endDate}
-            onEvent={event => console.log(event)}
+            // onEvent={event => console.log(event)}
         />
     )
 }

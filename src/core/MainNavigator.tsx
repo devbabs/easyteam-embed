@@ -11,7 +11,6 @@ import ClockScreen from '../screens/ClockScreen';
 import TimeSheetScreen from '../screens/TimeSheetScreen';
 import { EmployeeInterface } from './store/AuthenticationSlice';
 import EmployeeTimeSheetScreen from '../screens/EmployeeTimeSheetScreen';
-import ShiftFormScreen from '../screens/ShiftFormScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
@@ -39,27 +38,22 @@ const HomeNavigator = ({token, employees, user}: {
 }) => {
 
     const tabs = [
-        <Tab.Screen name="Clock" component={ClockScreen} />,
-        <Tab.Screen name="TimeSheet" component={TimeSheetScreen} />,
+        <Tab.Screen key={0} name="Clock" component={ClockScreen} />,
+        <Tab.Screen key={1} name="TimeSheet" component={TimeSheetScreen} />,
     ]
 
     if (user?.is_admin) {
-        tabs.push(<Tab.Screen name="EmployeeTimeSheet" options={{headerShown: false}} component={EmployeeTimeSheetScreen} />)
-        tabs.push(<Tab.Screen name="SettingsScreen" options={{title: "Settings"}} component={SettingsScreen} />)
+        tabs.push(<Tab.Screen key={2} name="EmployeeTimeSheetScreen" options={{headerShown: false}} component={EmployeeTimeSheetScreen} />)
+        tabs.push(<Tab.Screen key={3} name="SettingsScreen" options={{title: "Settings"}} component={SettingsScreen} />)
     }
 
     return (
-        // null
         <EasyTeamProvider
 			token={token}
 			employees={employees}
 			basePath={'https://easyteam-dev-cbbeaxcbbkabh2g8.z03.azurefd.net/embed'}
 		>
-            <Tab.Navigator
-                screenOptions={{
-                    // headerShown: false
-                }}
-            >
+            <Tab.Navigator>
                 {tabs}
             </Tab.Navigator>
         </EasyTeamProvider>

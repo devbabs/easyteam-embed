@@ -1,7 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { Timesheet, TimesheetRef, AddButton } from '@easyteam/ui';
-import { Button } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ShiftFormScreen from './ShiftFormScreen';
 
@@ -10,8 +8,6 @@ const Stack = createNativeStackNavigator()
 const EmployeeTimeSheetScreen = ({ navigation, route }) => {
   const ref = useRef<TimesheetRef>(null);
 
-    // In case we want to set the employeeId from the route params
-    // If undefined, it'll show the shifts for the signed in user
     const {
         employeeId,
         startDate: pStartDate,
@@ -33,21 +29,6 @@ const EmployeeTimeSheetScreen = ({ navigation, route }) => {
     useLayoutEffect(() => {
         // Allow the user to add a new shift if they have write permissions
         if (ref.current?.adminWritePermissions) {
-            // Add a button to the header to add a new shift
-            // navigation.setOptions({
-            //     // eslint-disable-next-line react/no-unstable-nested-components
-            //     headerRight: () => (
-            //         <AddButton
-            //             onPress={() =>
-            //                 // console.log("EmployeeID", ref.current!.selectedEmployeeId)
-            //                 navigation.navigate("ShiftFormScreen", {
-            //                     employeeId: ref.current!.selectedEmployeeId,
-            //                 })
-            //             }
-            //         />
-            //     ),
-            // });
-
             // Reload the data when the screen is focused
             const unsubscribe = navigation.addListener("focus", () => {
                 ref.current?.reloadData();
@@ -110,28 +91,6 @@ const EmployeeTimeSheetScreen = ({ navigation, route }) => {
                 name={"ShiftFormScreen"}
             />
         </Stack.Navigator>
-        // <>
-        //     <Button onPress={handleBack}>
-        //         Back
-        //     </Button>
-        //     <Timesheet
-        //         ref={ref}
-        //         onDateRangeChange={(newStartDate: string, newEndDate: string) => {
-        //             setStartDate(newStartDate);
-        //             setEndDate(newEndDate);
-        //         }}
-        //         startDate={startDate}
-        //         endDate={endDate}
-        //         employeeId={employeeId}
-        //         onEditPress={(date: string, selectedEmployeeId: string) =>
-        //             navigation.navigate("Shift Form", {
-        //                 date,
-        //                 employeeId: selectedEmployeeId,
-        //             })
-        //         }
-        //         onEvent={event => console.log(event)}
-        //     />
-        // </>
     );
 }
 
