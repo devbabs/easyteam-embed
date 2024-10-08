@@ -9,6 +9,9 @@ This is a new [**React Native**](https://reactnative.dev) project for React Nati
 | Jane | false |
 | Doe | true |
 
+### Authentication
+For authentication, use the password `123456` with any of the names in the Employees table at the top of this README as username.
+
 # Project Setup
 
 ## Step 1: Installation and Setup
@@ -75,9 +78,6 @@ npm run ios
 If everything is set up _correctly_, you should see the app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
 
 This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-# Important
-For authentication, use the password `123456` with any of the names in the Employees table at the top of this README as username.
 
 ## Troubleshooting
 
